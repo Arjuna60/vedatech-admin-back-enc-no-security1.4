@@ -1,0 +1,9 @@
+com\vedatech\admin\controller\account\SubAccountController.class
+com\vedatech\admin\controller\bank\BankController.class
+com\vedatech\admin\VedatechApplication.class
+com\vedatech\admin\controller\account\AccountTypeController.class
+com\vedatech\admin\controller\transaction\BankTransactionController.class
+com\vedatech\admin\controller\VedatechBootstrap.class
+com\vedatech\admin\RequestFilter.class
+com\vedatech\admin\controller\dto\BankTransactionDtoController.class
+com\vedatech\admin\controller\uploadfile\UploadFile.class

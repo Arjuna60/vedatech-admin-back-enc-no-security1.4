@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.vedatech.admin.VedatechAdminApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 32.831 s - in com.vedatech.admin.VedatechAdminApplicationTests
