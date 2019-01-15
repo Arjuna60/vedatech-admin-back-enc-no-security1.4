@@ -35,14 +35,21 @@ public class SubAccountServiceImp implements SubAccountService{
     @Override
     public SubAccount save(SubAccount object) {
 
+
         System.out.println(object.getAccountType().getId());
         System.out.println(subAccountDao.countAllByStatusAndAccountType_Id(true, object.getAccountType().getId()));
-
+        SubAccount subAccountOrigin = subAccountDao.findById(object.getId()).get();
+        if (object.getAccountType().getId() != subAccountOrigin.getAccountType().getId()) {
+           accountingTypeDao.save( changeTypeTrue(subAccountOrigin));
            subAccountDao.save(object);
-           isActive(object);
-           return object;
+            isActive(object);
+            return object;
+        } else {
+            subAccountDao.save(object);
+            isActive(object);
+            return object;
+        }
     }
-
 
     @Override
     public void delete(SubAccount object) {
@@ -63,7 +70,8 @@ public class SubAccountServiceImp implements SubAccountService{
         Double total=0.0;
         System.out.println(subAccountDao.countAllByStatusAndAccountType_Id(true, object.getAccountType().getId()));
         Optional<AccountingType> accountingType = accountingTypeDao.findAccountingTypeById(object.getAccountType().getId());
-         List<SubAccount> subAccountList = accountingType.get().getSubAccount();
+//         List<SubAccount> subAccountList = accountingType.get().getSubAccount();
+         List<SubAccount> subAccountList = subAccountDao.findAllByStatusAndAccountType_Id(true, object.getAccountType().getId());
          for(SubAccount s : subAccountList ){
              total = total + s.getBalance();
          }
@@ -74,9 +82,40 @@ public class SubAccountServiceImp implements SubAccountService{
             accountingType.get().setState(true);
         } else {
             accountingType.get().setState(false);
+            accountingType.get().setBalance(0.00);
         }
 
+
         accountingTypeDao.save(accountingType.get());
+
+    }
+
+    public AccountingType changeTypeTrue(SubAccount original) {
+        System.out.println("CHANGE TYPE TRUE");
+        Double total = 0.0;
+        if ( subAccountDao.countAllByStatusAndAccountType_Id(true, original.getAccountType().getId()) > 1) {
+            System.out.println("MAYOR QUE UNO");
+            AccountingType accountingType = accountingTypeDao.findById(original.getAccountType().getId()).get();
+            total = accountingType.getBalance() - original.getBalance();
+            System.out.println("TOTAL " + total);
+             accountingType.setBalance(total);
+             return accountingType;
+        }
+
+        if (subAccountDao.countAllByStatusAndAccountType_Id(true, original.getAccountType().getId()) == 1){
+
+            AccountingType accountingType = accountingTypeDao.findById(original.getAccountType().getId()).get();
+            total = accountingType.getBalance() - original.getBalance();
+            System.out.println("TOTAL " + total);
+            accountingType.setBalance(total);
+            accountingType.setState(false);
+            return accountingType;
+        } else {
+
+            AccountingType accountingType = accountingTypeDao.findById(original.getAccountType().getId()).get();
+            accountingType.setBalance(0.00);
+            return accountingType;
+        }
     }
 
 

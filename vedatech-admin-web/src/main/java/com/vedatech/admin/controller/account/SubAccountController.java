@@ -4,6 +4,7 @@ package com.vedatech.admin.controller.account;
 import com.vedatech.admin.accounting.AccountingType;
 import com.vedatech.admin.accounting.SubAccount;
 import com.vedatech.admin.bank.Bank;
+import com.vedatech.admin.services.accounting.sub.RepositorySubAccount;
 import com.vedatech.admin.services.accounting.sub.SubAccountDao;
 import com.vedatech.admin.services.accounting.sub.SubAccountService;
 import org.springframework.http.HttpHeaders;
@@ -21,13 +22,14 @@ import java.util.Optional;
 public class SubAccountController {
 
     public final SubAccountService subAccountService;
+    public final RepositorySubAccount subAccount;
 
-    public SubAccountController(SubAccountService subAccountService) {
+    public SubAccountController(SubAccountService subAccountService, RepositorySubAccount subAccount) {
         this.subAccountService = subAccountService;
+        this.subAccount = subAccount;
     }
 
-
-    //-------------------Create a Bank Account--------------------------------------------------------
+//-------------------Create a Bank Account--------------------------------------------------------
 
     @RequestMapping(value = "/addSubAccount/", method = RequestMethod.POST)
     public ResponseEntity<SubAccount> createUser(@RequestBody SubAccount subAccount, UriComponentsBuilder ucBuilder) {
@@ -61,6 +63,8 @@ public class SubAccountController {
 
         try {
             //   Bank currentBankAcc = bankService.findBankById(id);
+             SubAccount subAccountOrigin = subAccountService.findById(subAccount.getId()).get();
+
             subAccountService.save(subAccount);
             HttpHeaders headers = new HttpHeaders();
             headers.set("success", "the account is update success");
@@ -142,6 +146,15 @@ public class SubAccountController {
             return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
         }
 
+    }
+
+
+    @RequestMapping(value = "/getSub", method = RequestMethod.GET)
+    public ResponseEntity<List<SubAccount>> getSubAcc() {
+        HttpHeaders headers = new HttpHeaders();
+
+
+        return new ResponseEntity<List<SubAccount>>( HttpStatus.OK);
     }
 
 
