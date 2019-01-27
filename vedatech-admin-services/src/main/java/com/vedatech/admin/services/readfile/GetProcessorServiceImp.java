@@ -1,10 +1,7 @@
 package com.vedatech.admin.services.readfile;
 
 import org.springframework.stereotype.Service;
-import org.supercsv.cellprocessor.Optional;
-import org.supercsv.cellprocessor.ParseDate;
-import org.supercsv.cellprocessor.ParseDouble;
-import org.supercsv.cellprocessor.ParseLong;
+import org.supercsv.cellprocessor.*;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.constraint.StrRegEx;
 import org.supercsv.cellprocessor.ift.CellProcessor;
@@ -43,20 +40,22 @@ public class GetProcessorServiceImp implements GetProcessorService {
                     new NotNull(), // Country
                     new NotNull(), // Country
                     new NotNull(), // Country
-                    new NotNull(), // Country
-                    new NotNull(), // Country
-                    new NotNull(), // Country
-                    new NotNull(), // Country
-                    new NotNull(), // Country
-                    new NotNull(), // Country
-                    new NotNull(), // Country
-                    new NotNull(), // Country
+                    new Optional(), // Country
+                    new Optional(), // Country
+                    new StrRegEx(emailRegex), // email
+                    new Optional(), // Country
+                    new Optional(), // Country
+                    new Optional(), // Country
+                    new Optional(), // Country
+                    new Optional(), // Country
+                    new Optional(), // Country
                     new Optional(),
                     new Optional(),
                     new Optional(),
                     new Optional(),
                     new Optional(),
-
+                    new ParseDouble(), // Balance
+                    new Optional(new ParseBool()), // married
             };
 
             return processors;
@@ -76,19 +75,22 @@ public class GetProcessorServiceImp implements GetProcessorService {
                 new NotNull(), // Country
                 new NotNull(), // Country
                 new NotNull(), // Country
-                new NotNull(), // Country
-                new NotNull(), // Country
-                new NotNull(), // Country
-                new NotNull(), // Country
-                new NotNull(), // Country
-                new NotNull(), // Country
-                new NotNull(), // Country
-                new NotNull(), // Country
+                new Optional(), // Country
+                new Optional(), // Country
+                new StrRegEx(emailRegex), // email
+                new Optional(), // Country
+                new Optional(), // Country
+                new Optional(), // Country
+                new Optional(), // Country
+                new Optional(), // Country
+                new Optional(), // Country
                 new Optional(),
                 new Optional(),
                 new Optional(),
                 new Optional(),
                 new Optional(),
+                new ParseDouble(), // Balance
+                new Optional(new ParseBool()), // married
 
         };
 

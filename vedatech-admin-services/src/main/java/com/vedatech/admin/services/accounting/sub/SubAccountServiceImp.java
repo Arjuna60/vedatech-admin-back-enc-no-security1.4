@@ -35,20 +35,15 @@ public class SubAccountServiceImp implements SubAccountService{
     @Override
     public SubAccount save(SubAccount object) {
 
+        if (object.getId() != null ) {
+            return compareIds(object);
+        }else {
 
-        System.out.println(object.getAccountType().getId());
-        System.out.println(subAccountDao.countAllByStatusAndAccountType_Id(true, object.getAccountType().getId()));
-        SubAccount subAccountOrigin = subAccountDao.findById(object.getId()).get();
-        if (object.getAccountType().getId() != subAccountOrigin.getAccountType().getId()) {
-           accountingTypeDao.save( changeTypeTrue(subAccountOrigin));
-           subAccountDao.save(object);
-            isActive(object);
-            return object;
-        } else {
-            subAccountDao.save(object);
-            isActive(object);
-            return object;
+             subAccountDao.save(object);
+             isActive(object);
+             return object;
         }
+
     }
 
     @Override
@@ -66,6 +61,22 @@ public class SubAccountServiceImp implements SubAccountService{
 
     }
 
+    public SubAccount compareIds(SubAccount object) {
+        SubAccount subAccountOrigin = subAccountDao.findById(object.getId()).get();
+        if (object.getAccountType().getId() != subAccountOrigin.getAccountType().getId()) {
+            accountingTypeDao.save( changeTypeTrue(subAccountOrigin));
+            subAccountDao.save(object);
+            isActive(object);
+            return object;
+        } else {
+            subAccountDao.save(object);
+            isActive(object);
+            return object;
+        }
+
+    }
+
+
     public void isActive(SubAccount object){
         Double total=0.0;
         System.out.println(subAccountDao.countAllByStatusAndAccountType_Id(true, object.getAccountType().getId()));
@@ -75,10 +86,12 @@ public class SubAccountServiceImp implements SubAccountService{
          for(SubAccount s : subAccountList ){
              total = total + s.getBalance();
          }
-         accountingType.get().setBalance(total);
 
+         accountingType.get().setBalance(total);
+        System.out.println("TOTAL " + total);
         if ( subAccountDao.countAllByStatusAndAccountType_Id(true, object.getAccountType().getId()) >= 1 ||
               !accountingType.get().getState()) {
+            System.out.println("STATE " + accountingType.get().getState());
             accountingType.get().setState(true);
         } else {
             accountingType.get().setState(false);
@@ -93,26 +106,17 @@ public class SubAccountServiceImp implements SubAccountService{
     public AccountingType changeTypeTrue(SubAccount original) {
         System.out.println("CHANGE TYPE TRUE");
         Double total = 0.0;
+        AccountingType accountingType = accountingTypeDao.findById(original.getAccountType().getId()).get();
+        total = accountingType.getBalance() - original.getBalance();
+        accountingType.setBalance(total);
+
         if ( subAccountDao.countAllByStatusAndAccountType_Id(true, original.getAccountType().getId()) > 1) {
-            System.out.println("MAYOR QUE UNO");
-            AccountingType accountingType = accountingTypeDao.findById(original.getAccountType().getId()).get();
-            total = accountingType.getBalance() - original.getBalance();
-            System.out.println("TOTAL " + total);
-             accountingType.setBalance(total);
              return accountingType;
         }
-
         if (subAccountDao.countAllByStatusAndAccountType_Id(true, original.getAccountType().getId()) == 1){
-
-            AccountingType accountingType = accountingTypeDao.findById(original.getAccountType().getId()).get();
-            total = accountingType.getBalance() - original.getBalance();
-            System.out.println("TOTAL " + total);
-            accountingType.setBalance(total);
             accountingType.setState(false);
             return accountingType;
         } else {
-
-            AccountingType accountingType = accountingTypeDao.findById(original.getAccountType().getId()).get();
             accountingType.setBalance(0.00);
             return accountingType;
         }

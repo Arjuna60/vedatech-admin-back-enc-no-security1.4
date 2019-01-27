@@ -58,7 +58,7 @@ public class SubAccountController {
 
     //------------------- Update a Sub-Account --------------------------------------------------------
 
-    @RequestMapping(value = "/addSubAccount/", method = RequestMethod.PUT)
+    @RequestMapping(value = "/updateSubAccount", method = RequestMethod.PUT)
     public ResponseEntity<SubAccount> updateUser(@RequestBody SubAccount subAccount) {
 
         try {

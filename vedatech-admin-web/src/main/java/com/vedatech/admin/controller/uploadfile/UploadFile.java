@@ -77,6 +77,7 @@ public class UploadFile {
 
         try {
             File fileCnv= readFileService.convert(file);
+         //   System.out.println("FILE " + fileCnv);
             List<SupplierDto> objecList =  beanReaderSupplierService.readWithCsvBeanReaderSupplier(supplier, fileCnv.getName());
                 //supplierDao.saveAll(supplierList);
             if ( objecList.size()==0) {
@@ -94,6 +95,7 @@ public class UploadFile {
                     obj.setDisplayName(at.getDisplayName());
                     obj.setPhone(at.getPhone());
                     obj.setMobile(at.getMobile());
+                    obj.setEmail(at.getEmail());
                     obj.setWebsite(at.getWebsite());
                     obj.setStreet(at.getStreet());
                     obj.setCity(at.getCity());
@@ -105,6 +107,8 @@ public class UploadFile {
                     obj.setShippingState(at.getShippingState());
                     obj.setShippingCode(at.getShippingCode());
                     obj.setShippingCountry(at.getShippingCountry());
+                    obj.setBalance(at.getBalance());
+                    obj.setStatus(at.getStatus());
                     supplierDao.save(obj);
                 }
                 // accountingTypeServiceImp.saveAll(objecList);
@@ -142,6 +146,7 @@ public class UploadFile {
                     obj.setDisplayName(at.getDisplayName());
                     obj.setPhone(at.getPhone());
                     obj.setMobile(at.getMobile());
+                    obj.setEmail(at.getEmail());
                     obj.setWebsite(at.getWebsite());
                     obj.setStreet(at.getStreet());
                     obj.setCity(at.getCity());
@@ -153,6 +158,8 @@ public class UploadFile {
                     obj.setShippingState(at.getShippingState());
                     obj.setShippingCode(at.getShippingCode());
                     obj.setShippingCountry(at.getShippingCountry());
+                    obj.setBalance(at.getBalance());
+                    obj.setStatus(at.getStatus());
                     customerService.save(obj);
                 }
                 // accountingTypeServiceImp.saveAll(objecList);

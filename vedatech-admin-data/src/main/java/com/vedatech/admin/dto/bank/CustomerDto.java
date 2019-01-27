@@ -16,6 +16,7 @@ public class CustomerDto {
     private String company;
     private String displayName;
     private String phone;
+    private String email;
     private String mobile;
     private String website;
     private String street;
@@ -28,5 +29,7 @@ public class CustomerDto {
     private String shippingState;
     private String shippingCode;
     private String shippingCountry;
+    private Double balance;
+    private Boolean status;
 
 }

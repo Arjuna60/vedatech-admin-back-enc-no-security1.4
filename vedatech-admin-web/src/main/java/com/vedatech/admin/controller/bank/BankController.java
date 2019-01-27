@@ -1,7 +1,9 @@
 package com.vedatech.admin.controller.bank;
 
+import com.vedatech.admin.accounting.SubAccount;
 import com.vedatech.admin.bank.Bank;
 import com.vedatech.admin.bank.BankTransaction;
+import com.vedatech.admin.services.accounting.sub.SubAccountService;
 import com.vedatech.admin.services.bank.BankDao;
 import com.vedatech.admin.services.bank.BankService;
 import com.vedatech.admin.services.transaction.BankTransactionService;
@@ -18,19 +20,17 @@ import java.util.*;
 @RequestMapping("/api/bank")
 public class BankController {
 
+    public  final SubAccountService subAccountService;
     public final BankService bankService;
     public final BankDao bankDao;
     public final BankTransactionService bankTransactionService;
 
-
-    public BankController(BankService bankService, BankDao bankDao, BankTransactionService bankTransactionService) {
-     //   this.customerBeanDao = customerBeanDao;
+    public BankController(SubAccountService subAccountService, BankService bankService, BankDao bankDao, BankTransactionService bankTransactionService) {
+        this.subAccountService = subAccountService;
         this.bankService = bankService;
         this.bankDao = bankDao;
         this.bankTransactionService = bankTransactionService;
     }
-
-
 
 
     //-------------------Create a Bank Account--------------------------------------------------------
@@ -49,6 +49,10 @@ public class BankController {
 
 
         try {
+            SubAccount subAccount = subAccountService.findById(bank.getSubAccount().getId()).get();
+            subAccount.setBalance(bank.getBalance());
+            subAccountService.save(subAccount);
+            bank.setSubAccount(subAccount);
             bankService.save(bank);
         }catch (JDBCConnectionException e){
 
@@ -70,20 +74,23 @@ public class BankController {
 
     //------------------- Update a Bank Account --------------------------------------------------------
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Bank> updateUser(@PathVariable("id") long id, @RequestBody Bank bankAccount) {
-        System.out.println("Updating User " + id);
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    public ResponseEntity<Bank> updateUser(@RequestBody Bank bank) {
 
         try {
             //   Bank currentBankAcc = bankService.findBankById(id);
-            bankService.save(bankAccount);
+            SubAccount subAccount = subAccountService.findById(bank.getSubAccount().getId()).get();
+            subAccount.setBalance(bank.getBalance());
+            subAccountService.save(subAccount);
+            bank.setSubAccount(subAccount);
+            bankService.save(bank);
             HttpHeaders headers = new HttpHeaders();
             headers.set("success", "the account is update success");
-            return new ResponseEntity<Bank>(bankAccount,headers, HttpStatus.OK);
+            return new ResponseEntity<Bank>(bank,headers, HttpStatus.OK);
 
         }catch (Exception e){
             System.out.println(e);
-            System.out.println("User with id " + id + " not found");
+            System.out.println("User with id " + " not found");
             HttpHeaders headers = new HttpHeaders();
             headers.set("error", "la cuenta no existe");
             return new ResponseEntity<Bank>(headers, HttpStatus.NOT_FOUND);

@@ -15,6 +15,7 @@ public class SupplierDto {
     private String displayName;
     private String phone;
     private String mobile;
+    private String email;
     private String website;
     private String street;
     private String city;
@@ -26,6 +27,8 @@ public class SupplierDto {
     private String shippingState;
     private String shippingCode;
     private String shippingCountry;
+    private Double balance;
+    private Boolean status;
 
 
 }
